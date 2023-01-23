@@ -1,4 +1,4 @@
-#Your XAML goes here :)
+# Set-ExecutionPolicy Bypass -Scope Process
 $inputXML = @"
 <Window x:Class="playground_2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
