@@ -57,11 +57,8 @@ $xaml.SelectNodes("//*[@Name]") | %{"trying item $($_.Name)";
  
 Function Get-FormVariables{
 if ($global:ReadmeDisplay -ne $true){Write-host "If you need to reference this display again, run Get-FormVariables" -ForegroundColor Yellow;$global:ReadmeDisplay=$true}
-write-host "Found the following interactable elements from our form" -ForegroundColor Cyan
 get-variable WPF*
 }
- 
-Get-FormVariables
  
 #===========================================================================
 # Use this space to add code to the various form elements in your GUI
@@ -155,23 +152,6 @@ Function InstallProducts(){
 
 $WPFCB_Install.Add_Click({InstallProducts}) 
 $WPFCB_Configure.Add_Click({Configure})                                                     
-     
-#Reference 
- 
-#Adding items to a dropdown/combo box
-    #$vmpicklistView.items.Add([pscustomobject]@{'VMName'=($_).Name;Status=$_.Status;Other="Yes"})
-     
-#Setting the text of a text box to the current PC name    
-    #$WPFtextBox.Text = $env:COMPUTERNAME
-     
-#Adding code to a button, so that when clicked, it pings a system
-# $WPFbutton.Add_Click({ Test-connection -count 1 -ComputerName $WPFtextBox.Text
-# })
-#===========================================================================
-# Shows the form
-#===========================================================================
-write-host "To show the form, run the following" -ForegroundColor Cyan
-'$Form.ShowDialog() | out-null'
 
 $Form.ShowDialog() | out-null
  
