@@ -71,24 +71,21 @@ Function GetXMLLocation(){
 
 Function SetWorkingPath([string]$newpath){
     $workingFoldersPath = GetXMLLocation
-        if(-Not (Test-Path -Path $workingFoldersPath)){
-        $appDataRoaming = $env:AppData
-        $workingFoldersPath = Join-Path -Path $appDataRoaming -ChildPath "Autodesk\VaultCommon\Servers\Services_Security_6_29_2011\mavitec-vaultprod\Vaults\Vault\Objects"
-        [System.IO.Directory]::CreateDirectory($workingFoldersPath)
+    if(-Not (Test-Path -Path $workingFoldersPath)){
+        $folder = (get-item $workingFoldersPath).Directory
+        [System.IO.Directory]::CreateDirectory($folder)
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
-    	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath\WorkingFolders.xml
+    	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath
     }
 
-    $outputFile = $workingFoldersPath\WorkingFolders.xml)
-
     # Load the XML file
-    $xml = [xml](Get-Content $outputFile)
+    $xml = [xml](Get-Content $workingFoldersPath)
 
     # Modify the physical path
     $xml.WorkingFolders.Folder.PhysicalPath = $newPath
 
     # Save the modified XML to a new file
-    $xml.Save($outputFile)
+    $xml.Save($workingFoldersPath)
 }
 
 Function GetWorkingPath(){
@@ -159,9 +156,9 @@ Function InstallProducts(){
 }
 
 $WPFCB_Install.Add_Click({InstallProducts}) 
-$WPFCB_Configure.Add_Click({Configure})                                                     
+$WPFCB_Configure.Add_Click({Configure})    
 
 $Form.ShowDialog() | out-null
- 
+
  
  
