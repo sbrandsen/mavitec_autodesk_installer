@@ -79,10 +79,10 @@ Function SetWorkingPath([string]$newpath){
     	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath\WorkingFolders.xml
     }
 
-    $outputFile = $workingFoldersPath
+    $outputFile = $workingFoldersPath\WorkingFolders.xml)
 
     # Load the XML file
-    $xml = [xml](Get-Content $workingFoldersPath\WorkingFolders.xml)
+    $xml = [xml](Get-Content $outputFile)
 
     # Modify the physical path
     $xml.WorkingFolders.Folder.PhysicalPath = $newPath
