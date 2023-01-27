@@ -75,8 +75,8 @@ Function SetWorkingPath([string]$newpath){
         $appDataRoaming = $env:AppData
         $workingFoldersPath = Join-Path -Path $appDataRoaming -ChildPath "Autodesk\VaultCommon\Servers\Services_Security_6_29_2011\mavitec-vaultprod\Vaults\Vault\Objects"
         [System.IO.Directory]::CreateDirectory($workingFoldersPath)
-        $xml = '<?xml version="1.0" encoding="utf-8"?><WorkingFolders xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.autodesk.com/msd/plm/WorkingFolders/2004-08-09"><Folder><VirtualPath>$</VirtualPath><PhysicalPath>Z:\VaultLocalWorkspace</PhysicalPath></Folder></WorkingFolders>'
-        $xml | out-File -FilePath $workingFoldersPath\WorkingFolders.xml
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
+    	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath\WorkingFolders.xml
     }
 
     $outputFile = $workingFoldersPath
