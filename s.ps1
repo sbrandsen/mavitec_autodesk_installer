@@ -72,7 +72,7 @@ Function GetXMLLocation(){
 Function SetWorkingPath([string]$newpath){
     $workingFoldersPath = GetXMLLocation
     if(-Not (Test-Path -Path $workingFoldersPath)){
-        $folder = (get-item $workingFoldersPath).Directory
+        $folder = "$workingFoldersPath\.." | Convert-Path
         [System.IO.Directory]::CreateDirectory($folder)
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
     	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath
@@ -159,6 +159,3 @@ $WPFCB_Install.Add_Click({InstallProducts})
 $WPFCB_Configure.Add_Click({Configure})    
 
 $Form.ShowDialog() | out-null
-
- 
- 
