@@ -82,7 +82,7 @@ Function SetWorkingPath([string]$newpath){
     $outputFile = $workingFoldersPath
 
     # Load the XML file
-    $xml = [xml](Get-Content $workingFoldersPath)
+    $xml = [xml](Get-Content $workingFoldersPath\WorkingFolders.xml)
 
     # Modify the physical path
     $xml.WorkingFolders.Folder.PhysicalPath = $newPath
