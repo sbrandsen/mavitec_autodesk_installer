@@ -134,6 +134,7 @@ Function Configure(){
 	}
    
     $workingfolder = $WPFworkingfolderpath.Text
+    $workingfolder -replace '"', ""
     if($workingfolder -eq ""){
         [System.Windows.MessageBox]::Show('Invalid Working folder path')
         return
