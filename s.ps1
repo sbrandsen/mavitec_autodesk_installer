@@ -74,7 +74,7 @@ Function GetXMLLocation(){
 Function SetWorkingPath([string]$newpath){
     $workingFoldersPath = GetXMLLocation
     if(-Not (Test-Path -Path $workingFoldersPath)){
-        $folder = "$workingFoldersPath\.." | Convert-Path
+        $folder = $workingFoldersPath.Substring(0, $workingFoldersPath.lastIndexOf('\'))
         [System.IO.Directory]::CreateDirectory($folder)
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
     	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath
