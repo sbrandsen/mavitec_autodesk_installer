@@ -124,10 +124,10 @@ Function GetWorkingPath(){
 Function Configure(){
 
     $detectedversion = GetVaultVersion
-    $vaultloc = "C:\Program Files\Autodesk\Vault Client "$detectedversion"\Explorer\Connectivity.VaultPro.exe"
+    $vaultloc = "C:\Program Files\Autodesk\Vault Client $detectedversion\Explorer\Connectivity.VaultPro.exe"
             
     if(-Not (Test-Path -Path $vaultloc)){
-        [System.Windows.MessageBox]::Show('Could not find Vault '$detectedversion' on the C:\ drive, is it installed?')
+        [System.Windows.MessageBox]::Show("Could not find Vault $detectedversion on the C:\ drive, is it installed?")
         return
     }
 
