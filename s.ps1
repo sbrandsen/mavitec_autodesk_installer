@@ -134,7 +134,7 @@ Function Configure(){
 	}
    
     $workingfolder = $WPFworkingfolderpath.Text
-    $workingfolder -replace '"', ""
+    $workingfolder = $workingfolder -replace '"', ""
     if($workingfolder -eq ""){
         [System.Windows.MessageBox]::Show('Invalid Working folder path')
         return
@@ -149,7 +149,8 @@ Function Configure(){
 
     $ipj = Join-Path -Path $workingfolder -ChildPath "MavitecVault.ipj"
     if (-Not (Test-Path $ipj)) {
-        [System.Windows.MessageBox]::Show('MavitecVault.ipj not found in local working folder. GET it from the Vault')
+    	Set-Clipboard -Value 'mavitec-prodvault'
+        [System.Windows.MessageBox]::Show('MavitecVault.ipj not found in local working folder. GET it from the Vault`n`nServer: mavitec-vaultprod`nWas copied to your clipboard.')
         return
     
     }
