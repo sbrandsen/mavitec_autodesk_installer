@@ -104,9 +104,6 @@ function GetVaultVersion {
     return $version
 }
 
-$vers = GetInventorVersion
-Write-Host $vers
-
 Function GetWorkingPath(){
     $workingFoldersPath = GetXMLLocation
 
