@@ -9,7 +9,7 @@ $inputXML = @"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:playground_2"
         mc:Ignorable="d"
-        Title="Installer 2022" Height="250" Width="400">
+        Title="Installer (last tested 2022)" Height="250" Width="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -90,6 +90,23 @@ Function SetWorkingPath([string]$newpath){
     $xml.Save($workingFoldersPath)
 }
 
+function GetVaultVersion {
+    $executable = ""
+    try {
+    $executable = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Autodesk\Inventor\Current Version" -ErrorAction Stop).Executable
+    }
+    catch {
+        Write-Error "Inventor Version could not be detected, is it installed? Exiting."
+        Exit
+    }
+    $match = Select-String -InputObject $executable -Pattern "Autodesk\\Inventor (.*?)\\bin" -AllMatches | Select-Object -Expand Matches
+    $version = $match.Groups[1].Value
+    return $version
+}
+
+$vers = GetInventorVersion
+Write-Host $vers
+
 Function GetWorkingPath(){
     $workingFoldersPath = GetXMLLocation
 
@@ -105,10 +122,12 @@ Function GetWorkingPath(){
 }
 
 Function Configure(){
-    $vaultloc = "C:\Program Files\Autodesk\Vault Client 2022\Explorer\Connectivity.VaultPro.exe"
+
+    $detectedversion = GetVaultVersion
+    $vaultloc = "C:\Program Files\Autodesk\Vault Client "$detectedversion"\Explorer\Connectivity.VaultPro.exe"
             
     if(-Not (Test-Path -Path $vaultloc)){
-        [System.Windows.MessageBox]::Show('Could not find Vault 2022 on the C:\ drive, is it installed?')
+        [System.Windows.MessageBox]::Show('Could not find Vault '$detectedversion' on the C:\ drive, is it installed?')
         return
     }
 
