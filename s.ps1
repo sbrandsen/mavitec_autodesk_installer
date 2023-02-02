@@ -150,7 +150,7 @@ Function Configure(){
     $ipj = Join-Path -Path $workingfolder -ChildPath "MavitecVault.ipj"
     if (-Not (Test-Path $ipj)) {
     	Set-Clipboard -Value 'mavitec-prodvault'
-        [System.Windows.MessageBox]::Show('MavitecVault.ipj not found in local working folder. GET it from the Vault`n`nServer: mavitec-vaultprod`nWas copied to your clipboard.')
+        [System.Windows.MessageBox]::Show("MavitecVault.ipj not found in local working folder. GET it from the Vault`n`nServer: mavitec-vaultprod`nWas copied to your clipboard.")
         return
     
     }
