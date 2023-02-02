@@ -1,4 +1,6 @@
 # Set-ExecutionPolicy Bypass -Scope Process
+
+$installerurl = 'https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/2022.exe'
 $inputXML = @"
 <Window x:Class="playground_2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -150,7 +152,7 @@ Function Configure(){
 Function InstallProducts(){
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
     $form.Cursor = [System.Windows.Input.Cursors]::Wait
-    Invoke-WebRequest -Uri 'https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/2022.exe' -OutFile $env:temp\setup.exe
+    Invoke-WebRequest -Uri installerurl -OutFile $env:temp\setup.exe
     Start-Process -FilePath $env:temp\setup.exe
     $form.Cursor = [System.Windows.Input.Cursors]::Arrow
 }
