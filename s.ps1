@@ -152,7 +152,7 @@ Function Configure(){
 Function InstallProducts(){
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
     $form.Cursor = [System.Windows.Input.Cursors]::Wait
-    Invoke-WebRequest -Uri installerurl -OutFile $env:temp\setup.exe
+    Invoke-WebRequest -Uri $installerurl -OutFile $env:temp\setup.exe
     Start-Process -FilePath $env:temp\setup.exe
     $form.Cursor = [System.Windows.Input.Cursors]::Arrow
 }
