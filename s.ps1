@@ -127,11 +127,6 @@ Function Configure(){
         [System.Windows.MessageBox]::Show("Could not find Vault $detectedversion on the C:\ drive, is it installed?")
         return
     }
-
-    $ProcessActive = Get-Process "Connectivity.VaultPro" -ErrorAction SilentlyContinue
-	if($ProcessActive -eq $null){  
-        Start-Process -FilePath $vaultloc 
-	}
    
     $workingfolder = $WPFworkingfolderpath.Text
     $workingfolder = $workingfolder -replace '"', ""
@@ -146,6 +141,25 @@ Function Configure(){
     }
 
     SetWorkingPath($workingfolder)
+
+    $ProcessActive = Get-Process "Connectivity.VaultPro" -ErrorAction SilentlyContinue
+	if($ProcessActive -eq $null){  
+        Start-Process -FilePath $vaultloc 
+	}
+
+    $url = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
+    $parent = [System.IO.Path]::GetTempPath()
+    $output = [IO.Path]::Combine($parent, "MavitecFirstLogon.zip")
+    $extractionPath = "C:\ProgramData\Autodesk\Vault 2022\Extensions"
+
+    Invoke-WebRequest $url -OutFile $output
+
+    Expand-Archive -Path $output -DestinationPath $extractionPath -Force
+
+    if (Test-Path $output) {
+        Remove-Item $output
+    }
+
 
     $ipj = Join-Path -Path $workingfolder -ChildPath "MavitecVault.ipj"
     if (-Not (Test-Path $ipj)) {
