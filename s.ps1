@@ -152,7 +152,7 @@ Function Configure(){
     $output = [IO.Path]::Combine($parent, "MavitecFirstLogon.zip")
     $checkPath = [IO.Path]::Combine($parent, "MavitecFirstRun")
 
-    $extractionPath = "C:\ProgramData\Autodesk\Vault 2022\Extensions"
+    $extractionPath = "C:\ProgramData\Autodesk\Vault $detectedversion\Extensions"
 
     Invoke-WebRequest $url -OutFile $output
 
