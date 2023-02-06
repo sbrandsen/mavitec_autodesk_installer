@@ -150,6 +150,8 @@ Function Configure(){
     $url = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
     $parent = [System.IO.Path]::GetTempPath()
     $output = [IO.Path]::Combine($parent, "MavitecFirstLogon.zip")
+    $checkPath = [IO.Path]::Combine($parent, "MavitecFirstRun")
+
     $extractionPath = "C:\ProgramData\Autodesk\Vault 2022\Extensions"
 
     Invoke-WebRequest $url -OutFile $output
@@ -158,6 +160,11 @@ Function Configure(){
 
     if (Test-Path $output) {
         Remove-Item $output
+    }
+
+    if(-Not (Test-Path $checkPath)) {     
+        $form.Close()
+        exit
     }
 
 
