@@ -150,7 +150,7 @@ Function Configure(){
     $url = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
     $parent = [System.IO.Path]::GetTempPath()
     $output = [IO.Path]::Combine($parent, "MavitecFirstLogon.zip")
-    $checkPath = [IO.Path]::Combine($parent, "MavitecFirstRun")
+    $checkPath = [IO.Path]::Combine($parent, "MavitecFirstRun$detectedversion")
 
     $extractionPath = "C:\ProgramData\Autodesk\Vault $detectedversion\Extensions"
 
