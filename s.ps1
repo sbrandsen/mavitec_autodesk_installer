@@ -1,6 +1,9 @@
 # Set-ExecutionPolicy Bypass -Scope Process
 
 $installerurl = 'https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/2022.exe'
+$firstlogonurl = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
+$workingfolderxml = 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' 
+
 $inputXML = @"
 <Window x:Class="playground_2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -77,7 +80,7 @@ Function SetWorkingPath([string]$newpath){
         $folder = $workingFoldersPath.Substring(0, $workingFoldersPath.lastIndexOf('\'))
         [System.IO.Directory]::CreateDirectory($folder)
         [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
-    	Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' -OutFile $workingFoldersPath
+    	Invoke-WebRequest -Uri $workingfolderxml -OutFile $workingFoldersPath
     }
 
     # Load the XML file
@@ -146,15 +149,14 @@ Function Configure(){
 	if($ProcessActive -eq $null){  
         Start-Process -FilePath $vaultloc 
 	}
-
-    $url = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
+	
     $parent = [System.IO.Path]::GetTempPath()
     $output = [IO.Path]::Combine($parent, "MavitecFirstLogon.zip")
     $checkPath = [IO.Path]::Combine($parent, "MavitecFirstRun$detectedversion")
 
     $extractionPath = "C:\ProgramData\Autodesk\Vault $detectedversion\Extensions"
 
-    Invoke-WebRequest $url -OutFile $output
+    Invoke-WebRequest $firstlogonurl -OutFile $output
 
     Expand-Archive -Path $output -DestinationPath $extractionPath -Force
 
