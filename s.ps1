@@ -46,14 +46,14 @@ $inputXML = @"
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Content="¹ Uninstall: Old Versions" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
+            <Label Content="1 - Uninstall: Old Versions" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
             <Button Content="Launch Uninstall Control Panel" Margin="5" x:Name="CB_Uninstall_Tool" Grid.Row="1" Grid.ColumnSpan="2"/>
-            <Label Content="² Install 2024 release: Choose one" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2"/>
+            <Label Content="2 - Install 2024 release: Choose one" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2"/>
             <Button Content="Full Suite" Margin="5" x:Name="CB_Deployment_Full" Grid.Row="3"/>
             <Button Content="AutoCAD LT + Vault Office" x:Name="CB_Deployment_AutoCAD_Vault" Grid.Row="3" Grid.Column="1" Margin="5"/>
             <Button Content="AutoCAD LT only" Margin="5" Grid.Row="4" x:Name="CB_Deployment_AutoCAD_LT"/>
             <Button Content="Vault Office only" Margin="5" Grid.Column="1" Grid.Row="4" x:Name="CB_Deployment_Office"/>
-            <Label Content="³ Configure: For full suite only" FontWeight="Bold" Grid.Row="5" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Label Content="3 - Configure: For full suite only" FontWeight="Bold" Grid.Row="5" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Button Content="Setup full Suite (Old Vault)"  Margin="5" Grid.Row="6" Grid.ColumnSpan="1" x:Name="CB_SetupOldVault"/>
             <Button Content="Setup full Suite (New Vault)"  Margin="5" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="1" x:Name="CB_SetupNewVault"/>
         </Grid>
@@ -228,15 +228,16 @@ Function InstallProducts(){
 Function LaunchUninstallTool(){
 
 
-    control appwiz.cpl
-$results = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
+    $results = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
     Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
     Where-Object { $_.DisplayName -like "*Autodesk*" -and $_.DisplayName -match "(\d{4})" -and ([int]$matches[1] -ge 2000 -and [int]$matches[1] -le 2023) } |
     Select-Object -ExpandProperty DisplayName
 
+    control appwiz.cpl
+
     if ($results) {
         $results2 =$results -join "`n"
-
+        Start-Sleep -Seconds 2
         [System.Windows.Forms.MessageBox]::Show("Some will not appear, this is normal. This means the program is part of another. Just uninstall anything with Autodesk and an old year name.`n`n" + $results2, "Autodesk programs to Uninstall")
     }
 
@@ -324,6 +325,7 @@ function Show-TrayNotification {
     $notification.Dispose()
 }
 
+Add-Type -AssemblyName System.Windows.Forms
 $WPFCB_Uninstall_Tool.Add_Click({LaunchUninstallTool})
 
 $WPFCB_Deployment_Full.Add_Click({InstallAutoCADLT})  #todo
