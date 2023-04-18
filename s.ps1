@@ -186,7 +186,7 @@ Function Configure(){
     Invoke-WebRequest $firstlogonurl -OutFile $output
 
     Expand-Archive -Path $output -DestinationPath $extractionPath -Force
-
+    iwr
     if (Test-Path $output) {
         Remove-Item $output
     }
@@ -256,11 +256,13 @@ function CheckInstalledPrograms {
         $result = [System.Windows.Forms.MessageBox]::Show("There are still programs to uninstall:  `n`n$touninstall`n`nContinue anyways?", "No clean starting point found", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning) 
         if ($result -eq [System.Windows.Forms.DialogResult]::Yes) {
             return $true
+        } else {
+            return $false
         }
 
     }
 
-    return $false
+    return $true
 }
 
 function InstallAutoCADLT(){
