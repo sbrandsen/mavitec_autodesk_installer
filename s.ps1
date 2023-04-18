@@ -328,7 +328,7 @@ function Show-TrayNotification {
 Add-Type -AssemblyName System.Windows.Forms
 $WPFCB_Uninstall_Tool.Add_Click({LaunchUninstallTool})
 
-$WPFCB_Deployment_Full.Add_Click({InstallAutoCADLT})  #todo
+$WPFCB_Deployment_Full.Add_Click({InstallFullSuite})  #todo
 $WPFCB_Deployment_AutoCAD_Vault.Add_Click({InstallAutoCADVault})  #todo
 $WPFCB_Deployment_AutoCAD_LT.Add_Click({InstallAutoCADLT})  #done
 $WPFCB_Deployment_Office.Add_Click({InstallVaultOffice})  #todo
