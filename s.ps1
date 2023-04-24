@@ -318,7 +318,6 @@ function Show-TrayNotification {
     )
     
     $notification = New-Object System.Windows.Forms.NotifyIcon
-    $notification.Icon = [System.Drawing.SystemIcons]::Information
     $notification.Visible = $true
     
     $notification.ShowBalloonTip(5000, $Title, $Description, [System.Windows.Forms.ToolTipIcon]::Info)
