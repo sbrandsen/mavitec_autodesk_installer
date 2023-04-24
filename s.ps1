@@ -317,8 +317,6 @@ function Show-TrayNotification {
         [string]$Description
     )
     
-    Add-Type -AssemblyName System.Windows.Forms
-    
     $notification = New-Object System.Windows.Forms.NotifyIcon
     $notification.Icon = [System.Drawing.SystemIcons]::Information
     $notification.Visible = $true
