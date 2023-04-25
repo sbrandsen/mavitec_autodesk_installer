@@ -95,14 +95,15 @@ get-variable WPF*
 #===========================================================================
 # Use this space to add code to the various form elements in your GUI
 #===========================================================================
-Function GetXMLLocation(){
+Function GetXMLLocation([string]$servername) {
     $appDataRoaming = $env:AppData
-    $workingFoldersPath = Join-Path -Path $appDataRoaming -ChildPath "Autodesk\VaultCommon\Servers\Services_Security_6_29_2011\mavitec-vaultprod\Vaults\Vault\Objects\WorkingFolders.xml"
+    $workingFoldersPath = Join-Path -Path $appDataRoaming -ChildPath "Autodesk\VaultCommon\Servers\Services_Security_6_29_2011\$servername\Vaults\Vault\Objects\WorkingFolders.xml"
     return $workingFoldersPath
 }
 
-Function SetWorkingPath([string]$newpath){
-    $workingFoldersPath = GetXMLLocation
+
+Function SetWorkingPath([string]$newpath, [string] $servername){
+    $workingFoldersPath = GetXMLLocation -servername $servername
     if(-Not (Test-Path -Path $workingFoldersPath)){
         $folder = $workingFoldersPath.Substring(0, $workingFoldersPath.lastIndexOf('\'))
         [System.IO.Directory]::CreateDirectory($folder)
@@ -148,7 +149,7 @@ Function GetWorkingPath(){
     return $xml.WorkingFolders.Folder.PhysicalPath
 }
 
-Function Configure(){
+Function Configure([string] $servername){
 
     $detectedversion = GetVaultVersion
     $vaultloc = "C:\Program Files\Autodesk\Vault Client $detectedversion\Explorer\Connectivity.VaultPro.exe"
@@ -170,7 +171,7 @@ Function Configure(){
         return
     }
 
-    SetWorkingPath($workingfolder)
+    SetWorkingPath($workingfolder, $servername)
 
     $ProcessActive = Get-Process "Connectivity.VaultPro" -ErrorAction SilentlyContinue
 	if($ProcessActive -eq $null){  
@@ -327,11 +328,11 @@ Add-Type -AssemblyName System.Windows.Forms
 $WPFCB_Uninstall_Tool.Add_Click({LaunchUninstallTool})
 
 $WPFCB_Deployment_Full.Add_Click({InstallFullSuite})  #todo
-$WPFCB_Deployment_AutoCAD_Vault.Add_Click({InstallAutoCADVault})  #todo
+$WPFCB_Deployment_AutoCAD_Vault.Add_Click({InstallAutoCADVault})  #done
 $WPFCB_Deployment_AutoCAD_LT.Add_Click({InstallAutoCADLT})  #done
-$WPFCB_Deployment_Office.Add_Click({InstallVaultOffice})  #todo
+$WPFCB_Deployment_Office.Add_Click({InstallVaultOffice})  #done
 
-$WPFCB_SetupOldVault.Add_Click({InstallAutoCADLT})  #todo
-$WPFCB_SetupNewVault.Add_Click({InstallAutoCADLT})  #todo
+$WPFCB_SetupOldVault.Add_Click({Configure -servername "mavitec-vault"})  #done
+$WPFCB_SetupNewVault.Add_Click({Configure -servername "mavitec-vaultprod"})  #done
 
 $Form.ShowDialog() | out-null
