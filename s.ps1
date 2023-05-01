@@ -300,11 +300,8 @@ Function Auto-UninstallAutodesk {
 
             $filePath = $path.Substring(0, $firstSpaceAfterDotIndex)
 
-            Write-Host $filePath           
-            Write-Host $arguments
-
             Write-Host "Uninstalling"$program.DisplayName
-            #Start-Process -FilePath $filePath -ArgumentList $arguments -Wait
+            Start-Process -FilePath $filePath -ArgumentList $arguments -Wait
             Write-Host "Uninstalled"$program.DisplayName
             Write-Host ""
                      
