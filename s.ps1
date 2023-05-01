@@ -194,31 +194,7 @@ Function Configure([string] $servername){
     if (Test-Path $output) {
         Remove-Item $output
     }
-
-    if(-Not (Test-Path $checkPath)) {     
-        $form.Close()
-        exit
-    }
-
-
-    $ipj = Join-Path -Path $workingfolder -ChildPath "MavitecVault.ipj"
-    if (-Not (Test-Path $ipj)) {
-    	Set-Clipboard -Value 'mavitec-prodvault'
-        [System.Windows.MessageBox]::Show("MavitecVault.ipj not found in local working folder. GET it from the Vault`n`nServer: mavitec-vaultprod`nWas copied to your clipboard.")
-        return
-    
-    }
-
-    $vbs = Join-Path -Path $workingfolder -ChildPath "Application Settings\Inventor\Applications\Setup Mavitec Addin\Setup Addin.vbs"
-    if (-Not (Test-Path $vbs)) {
-        [System.Windows.MessageBox]::Show("Setup Addin folder not found in local working folder. GET Setup Mavitec Addin folder from the Vault")
-        return
-    }
-
-    Start-Process -FilePath $vbs
-    $form.Close()
     exit
-
 }
 
 Function LaunchUninstallTool(){
