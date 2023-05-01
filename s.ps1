@@ -1,6 +1,6 @@
 # Set-ExecutionPolicy Bypass -Scope Process
 
-$installerurl = 'https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/2022.exe'
+$deploymentfolder = '\\network.local\dfs\Engineering\Software\Autodesk\Deployment'
 $firstlogonurl = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
 $workingfolderxml = 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' 
 
@@ -222,14 +222,6 @@ Function Configure([string] $servername){
 
 }
 
-Function InstallProducts(){
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
-    $form.Cursor = [System.Windows.Input.Cursors]::Wait
-    Invoke-WebRequest -Uri $installerurl -OutFile $env:temp\setup.exe
-    Start-Process -FilePath $env:temp\setup.exe
-    $form.Cursor = [System.Windows.Input.Cursors]::Arrow
-}
-
 Function LaunchUninstallTool(){
 
 
@@ -249,7 +241,7 @@ Function LaunchUninstallTool(){
 
                 $count = Auto-UninstallAutodesk
                 if($count -le 40){
-                    [System.Windows.Forms.MessageBox]::Show($count + " programs succesfully uninstalled!")
+                    [System.Windows.Forms.MessageBox]::Show($count.ToString() + " programs succesfully uninstalled!")
                 } else {                   
                     [System.Windows.Forms.MessageBox]::Show("Could not automatically remove all programs, do it manually.")
                     Manual-UninstallAutodesk
@@ -345,14 +337,10 @@ Function Check-InstalledAutodeskPrograms {
 }
 
 function CheckInstalledPrograms {
-    
-    $touninstall = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
-    Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
-    Where-Object { $_.DisplayName -like "*Autodesk*" -and $_.DisplayName -match "(\d{4})" -and ([int]$matches[1] -ge 2000 -and [int]$matches[1] -le 2099) } |
-    Select-Object -ExpandProperty DisplayName
+    $touninstall = Check-InstalledAutodeskPrograms
 
-    if($touninstall){
-    $touninstall = $touninstall -join "`n"
+    if($touninstall.Count -gt 0){
+    $touninstall = ($touninstall | Select-Object -ExpandProperty DisplayName) -join "`n"
         $result = [System.Windows.Forms.MessageBox]::Show("There are still programs to uninstall:  `n`n$touninstall`n`nContinue anyways?", "No clean starting point found", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning) 
         if ($result -eq [System.Windows.Forms.DialogResult]::Yes) {
             return $true
@@ -400,11 +388,11 @@ function InstallDeployment {
     # Start installation process and wait for it to finish
     $installArgs = @(
         '-i', 'deploy', '--offline_mode', '-q', '-o',
-        "\\network.local\dfs\Engineering\Software\Autodesk\Deployment\$ProgramFolder\image\Collection.xml",
+        "$Deploymentfolder\$ProgramFolder\image\Collection.xml",
         '--installer_version', $InstallerVersion
     )
 
-    $installPath = "\\network.local\dfs\Engineering\Software\Autodesk\Deployment\$ProgramFolder\image\Installer.exe"
+    $installPath = "$Deploymentfolder\$ProgramFolder\image\Installer.exe"
     Start-Process -FilePath $installPath -ArgumentList $installArgs -Wait
 
     # Show notification after installation is finished
