@@ -278,8 +278,10 @@ Function Auto-UninstallAutodesk {
                 $path += " /qn"
             }
 
+            $filePath, $arguments = $path -split ' ', 2
+
             Write-Host "Uninstalling"$program.DisplayName
-            Start-Process -FilePath $path -Wait
+            Start-Process -FilePath $filePath -ArgumentList $arguments -Wait
             Write-Host "Uninstalled"$program.DisplayName
             Write-Host ""
                      
