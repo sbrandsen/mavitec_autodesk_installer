@@ -229,11 +229,62 @@ Function InstallProducts(){
 Function LaunchUninstallTool(){
 
 
-    $results = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
-    Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | 
-    Where-Object { $_.DisplayName -like "*Autodesk*" -and $_.DisplayName -match "(\d{4})" -and ([int]$matches[1] -ge 2000 -and [int]$matches[1] -le 2023) } |
-    Select-Object -ExpandProperty DisplayName
+    $results = Check-InstalledAutodeskPrograms
 
+    if ($results) {
+        $dialogResult = [System.Windows.Forms.MessageBox]::Show("This will help to remove Autodesk Programs, so that everyone uses the same version`n`nPress YES: Automatically remove ALL Inventor, AutoCAD, Vault and Libraries. USE WITH CAUTION, can take a long while!`n`nPress NO: Manually remove (specific) versions, safer but slower.", "Remove Autodesk Versions", "YesNoCancel")
+
+        switch ($dialogResult) {
+            "Yes" {
+                $dialogResult = [System.Windows.Forms.MessageBox]::Show("Are you sure you want to uninstall ALL Autodesk products?", "Confirmation", "YesNo")
+                switch ($dialogResult) {
+                    "No" {
+                        return
+                    }
+                }
+
+                $count = Auto-UninstallAutodesk
+                if($count -le 40){
+                    [System.Windows.Forms.MessageBox]::Show($count + " programs succesfully uninstalled!")
+                } else {                   
+                    [System.Windows.Forms.MessageBox]::Show("Could not automatically remove all programs, do it manually.")
+                    Manual-UninstallAutodesk
+                }
+            }
+            "No" {
+                Manual-UninstallAutodesk
+            }
+        }
+
+    }
+
+}
+
+Function Auto-UninstallAutodesk {
+    $programs = Check-InstalledAutodeskPrograms
+    $count = 0
+    While($programs.Count -ne 0 -and $count -le 40){
+        foreach ($program in $programs) {
+            $path = $program.UninstallString
+
+            if ($path -match "AdOdis") {
+                $path = $path -replace "-i", "-q -i"
+            }
+            if ($path -match "MsiExec") {
+                $path += " /qn"
+            }
+
+            Start-Process -FilePath $UninstallString -Wait
+                     
+            $count++
+            $programs = Check-InstalledAutodeskPrograms
+        }
+    }
+
+    return $count
+}
+
+function Manual-UninstallAutodesk {
     control appwiz.cpl
     Start-Sleep -Milliseconds 500
     [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
@@ -241,12 +292,26 @@ Function LaunchUninstallTool(){
     [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
     [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
     [System.Windows.Forms.SendKeys]::SendWait("Autodesk*20")
+    $results2 = ($results | Select-Object -ExpandProperty DisplayName) -join "`n"
+    Start-Sleep -Seconds 2
+    [System.Windows.Forms.MessageBox]::Show("Some will not appear, this is normal. This means the program is part of another. Just uninstall anything with Autodesk and an old year name.`n`n" + $results2, "Autodesk programs to Uninstall")    
+}
 
-    if ($results) {
-        $results2 =$results -join "`n"
-        Start-Sleep -Seconds 2
-        [System.Windows.Forms.MessageBox]::Show("Some will not appear, this is normal. This means the program is part of another. Just uninstall anything with Autodesk and an old year name.`n`n" + $results2, "Autodesk programs to Uninstall")
-    }
+Function Check-InstalledAutodeskPrograms {
+
+    $infos = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | 
+            Where-object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
+            select DisplayName, Publisher, DisplayVersion, UninstallString
+
+    $infos += Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
+            Where-object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
+            select DisplayName, Publisher, DisplayVersion, UninstallString
+
+    $infos += Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
+            Where-object {$_.DisplayName -ne $null -and $_.SystemComponent -ne "1"} |
+            select DisplayName, Publisher, DisplayVersion, UninstallString
+
+    return $infos | Where-Object { $_.Publisher -like "Autodesk*" -and $_.DisplayName -match '\d{4}' -and  $_.DisplayName -notlike "*Update*" }
 
 }
 
