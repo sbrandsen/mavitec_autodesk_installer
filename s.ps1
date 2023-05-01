@@ -252,6 +252,8 @@ Function LaunchUninstallTool(){
             }
         }
 
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("No Autodesk products found. Continue to the next step")
     }
 
 }
