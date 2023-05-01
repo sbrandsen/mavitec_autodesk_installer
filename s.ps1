@@ -191,7 +191,6 @@ Function Configure([string] $servername){
     Invoke-WebRequest $firstlogonurl -OutFile $output
 
     Expand-Archive -Path $output -DestinationPath $extractionPath -Force
-    iwr
     if (Test-Path $output) {
         Remove-Item $output
     }
