@@ -235,6 +235,12 @@ Function LaunchUninstallTool(){
     Select-Object -ExpandProperty DisplayName
 
     control appwiz.cpl
+    Start-Sleep -Milliseconds 500
+    [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
+    [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
+    [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
+    [System.Windows.Forms.SendKeys]::SendWait("{TAB}")
+    [System.Windows.Forms.SendKeys]::SendWait("Autodesk*20")
 
     if ($results) {
         $results2 =$results -join "`n"
