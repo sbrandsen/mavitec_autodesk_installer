@@ -388,11 +388,11 @@ function InstallDeployment {
     # Start installation process and wait for it to finish
     $installArgs = @(
         '-i', 'deploy', '--offline_mode', '-q', '-o',
-        "$Deploymentfolder\$ProgramFolder\image\Collection.xml",
+        "$deploymentfolder\$ProgramFolder\image\Collection.xml",
         '--installer_version', $InstallerVersion
     )
 
-    $installPath = "$Deploymentfolder\$ProgramFolder\image\Installer.exe"
+    $installPath = "$deploymentfolder\$ProgramFolder\image\Installer.exe"
     Start-Process -FilePath $installPath -ArgumentList $installArgs -Wait
 
     # Show notification after installation is finished
