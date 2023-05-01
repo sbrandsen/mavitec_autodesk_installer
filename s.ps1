@@ -82,10 +82,14 @@ catch{
 # Load XAML Objects In PowerShell
 #===========================================================================
   
-$xaml.SelectNodes("//*[@Name]") | %{"trying item $($_.Name)";
-    try {Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name) -ErrorAction Stop}
-    catch{throw}
+$xaml.SelectNodes("//*[@Name]") | %{
+    try {
+        Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name) -ErrorAction Stop
     }
+    catch {
+        throw
+    }
+}
  
 Function Get-FormVariables{
 if ($global:ReadmeDisplay -ne $true){Write-host "If you need to reference this display again, run Get-FormVariables" -ForegroundColor Yellow;$global:ReadmeDisplay=$true}
@@ -274,7 +278,10 @@ Function Auto-UninstallAutodesk {
                 $path += " /qn"
             }
 
+            Write-Host "Uninstalling"$program.DisplayName
             Start-Process -FilePath $UninstallString -Wait
+            Write-Host "Uninstalled"$program.DisplayName
+            Write-Host ""
                      
             $count++
             $programs = Check-InstalledAutodeskPrograms
