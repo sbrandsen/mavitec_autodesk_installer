@@ -270,6 +270,7 @@ Function Auto-UninstallAutodesk {
     While($programs.Count -ne 0 -and $count -le 40){
         foreach ($program in $programs) {
             $path = $program.UninstallString
+            $newString = $originalString -replace '^msiexec\s', 'msiexec.exe '
 
             if ($path -match "AdOdis") {
                 $path = $path -replace "-i", "-q -i"
@@ -278,10 +279,32 @@ Function Auto-UninstallAutodesk {
                 $path += " /qn"
             }
 
-            $filePath, $arguments = $path -split ' ', 2
+            $filepath = ""
+            $arguments = ""
+            $firstSpaceAfterDotIndex = 0
+
+            $dotIndex = $path.IndexOf('.')
+            if ($dotIndex -gt 0) {            
+                $firstSpaceAfterDotIndex = $path.IndexOf(' ', $dotIndex)
+                if ($firstSpaceAfterDotIndex -lt 0) {
+                    $firstSpaceAfterDotIndex = $path.Length
+                }
+            } else {
+                $firstSpaceAfterDotIndex = $path.IndexOf(' ')
+            }
+
+
+            if ($firstSpaceAfterDotIndex -gt 0) {
+                $arguments = $path.Substring($firstSpaceAfterDotIndex).Trim()
+            }
+
+            $filePath = $path.Substring(0, $firstSpaceAfterDotIndex)
+
+            Write-Host $filePath           
+            Write-Host $arguments
 
             Write-Host "Uninstalling"$program.DisplayName
-            Start-Process -FilePath $filePath -ArgumentList $arguments -Wait
+            #Start-Process -FilePath $filePath -ArgumentList $arguments -Wait
             Write-Host "Uninstalled"$program.DisplayName
             Write-Host ""
                      
