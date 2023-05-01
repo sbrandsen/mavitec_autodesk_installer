@@ -279,7 +279,7 @@ Function Auto-UninstallAutodesk {
             }
 
             Write-Host "Uninstalling"$program.DisplayName
-            Start-Process -FilePath $UninstallString -Wait
+            Start-Process -FilePath $path -Wait
             Write-Host "Uninstalled"$program.DisplayName
             Write-Host ""
                      
