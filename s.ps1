@@ -1,6 +1,15 @@
 # Set-ExecutionPolicy Bypass -Scope Process
 
-$deploymentfolder = '\\network.local\dfs\Engineering\Software\Autodesk\Deployment'
+$deploymentfolder = ''
+
+$deploymentfolder_NL = '\\network.local\dfs\Engineering\Software\Autodesk\Deployment'
+$deploymentfolder_TR = 'TBT'
+
+$foldername_full = "2024"
+$foldername_vault_office = "2024_Vault_Office"
+$foldername_autocad_lt= "2024_Autocad_LT"
+$foldername_autocad_lt_vault_office = "2024_Autocad_LT+Vault_Office"
+
 $firstlogonurl = "https://github.com/sbrandsen/mavitec_autodesk_installer/raw/main/MavitecFirstLogon.zip"
 $workingfolderxml = 'https://raw.githubusercontent.com/sbrandsen/mavitec_autodesk_installer/main/WorkingFolders.xml' 
 
@@ -12,11 +21,11 @@ $inputXML = @"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:playground_2"
         mc:Ignorable="d"
-        Title="Installer (last tested 2022)" Height="350" Width="400">
+        Title="Installer (last tested 2022)" Height="450" Width="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="20" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="2" Margin="5,0">
@@ -26,40 +35,42 @@ $inputXML = @"
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="10" />
             </Grid.RowDefinitions>
             <Label Content="Local working folder path:" Grid.Row="0" VerticalAlignment="Stretch" />
             <TextBox HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" x:Name="workingfolderpath" VerticalAlignment="Stretch" />
-
         </Grid>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Label Content="1 - Uninstall: Old Versions" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0"/>
-            <Button Content="Launch Uninstall Control Panel" Margin="5" x:Name="CB_Uninstall_Tool" Grid.Row="1" Grid.ColumnSpan="2"/>
-            <Label Content="2 - Install 2024 release: Choose one" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2"/>
-            <Button Content="Full Suite" Margin="5" x:Name="CB_Deployment_Full" Grid.Row="3"/>
-            <Button Content="AutoCAD LT + Vault Office" x:Name="CB_Deployment_AutoCAD_Vault" Grid.Row="3" Grid.Column="1" Margin="5"/>
-            <Button Content="AutoCAD LT only" Margin="5" Grid.Row="4" x:Name="CB_Deployment_AutoCAD_LT"/>
-            <Button Content="Vault Office only" Margin="5" Grid.Column="1" Grid.Row="4" x:Name="CB_Deployment_Office"/>
-            <Label Content="3 - Configure: For full suite only" FontWeight="Bold" Grid.Row="5" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Button Content="Setup full Suite (Old Vault)"  Margin="5" Grid.Row="6" Grid.ColumnSpan="1" x:Name="CB_SetupOldVault"/>
-            <Button Content="Setup full Suite (New Vault)"  Margin="5" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="1" x:Name="CB_SetupNewVault"/>
+            <Label Content="1 - Uninstall: Old Versions" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" />
+            <Button Content="Launch Uninstall Control Panel" Margin="5" x:Name="CB_Uninstall_Tool" Grid.Row="1" Grid.ColumnSpan="2" />
+            <Label Content="2 - Install 2024 release: Choose one" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" />
+            <Label Grid.Row="3" VerticalAlignment="Top" Content="Installing from" Grid.ColumnSpan="2" HorizontalAlignment="Center" />
+            <RadioButton Grid.Row="3" HorizontalAlignment="Center" Content="Netherlands"  VerticalAlignment="Bottom" GroupName="Location" IsChecked="True" x:Name="RB_Netherlands" Margin="0,0,0,8" />
+            <RadioButton Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" Content="Turkey"  VerticalAlignment="Bottom" GroupName="Location" x:Name="RB_Turkey" Margin="0,0,0,8" />
+            <Button Content="Full Suite" Margin="5" x:Name="CB_Deployment_Full" Grid.Row="4" />
+            <Button Content="AutoCAD LT + Vault Office" x:Name="CB_Deployment_AutoCAD_Vault" Grid.Row="4" Grid.Column="1" Margin="5" />
+            <Button Content="AutoCAD LT only" Margin="5" Grid.Row="5" x:Name="CB_Deployment_AutoCAD_LT" />
+            <Button Content="Vault Office only" Margin="5" Grid.Column="1" Grid.Row="5" x:Name="CB_Deployment_Office" />
+            <Label Content="3 - Configure: For full suite only" FontWeight="Bold" Grid.Row="6" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Button Content="Setup full Suite (Old Vault)"  Margin="5" Grid.Row="7" Grid.ColumnSpan="1" x:Name="CB_SetupOldVault" />
+            <Button Content="Setup full Suite (New Vault)"  Margin="5" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="1" x:Name="CB_SetupNewVault" />
         </Grid>
     </Grid>
 </Window>
-
 
 
 "@ 
@@ -331,19 +342,19 @@ function CheckInstalledPrograms {
 }
 
 function InstallAutoCADLT(){
-    InstallDeployment -ProgramName "AutoCAD LT" -ProgramFolder "2024_Autocad_LT"
+    InstallDeployment -ProgramName "AutoCAD LT" -ProgramFolder $foldername_autocad_lt
 }
 
 function InstallAutoCADVault(){ 
-    InstallDeployment -ProgramName "AutoCAD LT + Vault Office" -ProgramFolder "2024_Autocad_LT+Vault_Office"
+    InstallDeployment -ProgramName "AutoCAD LT + Vault Office" -ProgramFolder $foldername_autocad_lt_vault_office
 }
 
 function InstallVaultOffice(){
-    InstallDeployment -ProgramName "Vault Office" -ProgramFolder "2024_Autocad_LT"
+    InstallDeployment -ProgramName "Vault Office" -ProgramFolder $foldername_autocad_lt
 }
 
 Function InstallFullSuite(){
-    InstallDeployment -ProgramName "Full Suite" -ProgramFolder "2024"
+    InstallDeployment -ProgramName "Full Suite" -ProgramFolder $foldername_full
 }
 
 function InstallDeployment {
@@ -357,7 +368,16 @@ function InstallDeployment {
 
     if (-Not $answer) {
         return
-    }  
+    }
+
+    if($WPFRB_Netherlands.IsChecked){
+        $deploymentfolder = $deploymentfolder_NL
+    }
+
+    if($WPFRB_Turkey.IsChecked){
+        $deploymentfolder = $deploymentfolder_TR
+    }
+
 
     # Show notification before starting installation
     Show-TrayNotification -Title "$ProgramName Installer" -Description "$ProgramName installation started, there will be a confirmation when finished."
