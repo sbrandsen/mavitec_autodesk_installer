@@ -1,0 +1,6 @@
+Windows Registry Editor Version 5.00
+
+ 
+
+[HKEY_CURRENT_USER\SOFTWARE\Autodesk\DwgCommon\shellex\apps\{F29F85E0-4FF9-1068-AB91-08002B27B3D9}:AutoCAD]
+"OpenLaunch"="\"C:\\Program Files\\Autodesk\\AutoCAD 2024\\acad.exe\" \"%1\""
